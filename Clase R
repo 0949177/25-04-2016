@@ -1,0 +1,36 @@
+#####Emmanuel González Escobar
+library (foreign)
+install.packages("fpp")
+library(fpp)
+bimbo<- read.csv(("C:\\Users\\SALA-C23\\Downloads\\Bimbo.csv"), header=T)
+liver<-read.csv(("C:\\Users\\SALA-C23\\Downloads\\liverpool.csv"), header=T)
+inbursa<-read.csv(("C:\\Users\\SALA-C23\\Downloads\\inbursa.csv"), header=T)
+carso<- read.csv(("C:\\Users\\SALA-C23\\Downloads\\carso.csv"), header=T)
+bimbosta <- ts(bimbo[,2], start=2006, frequency = 12)
+liversta <- ts(liver[,2], start=2006, frequency = 12)
+inbursta <- ts(inbursa[,2], start=2006, frequency = 12)
+carsosta <- ts(carso[,2], start=2006, frequency = 12)
+bimbostc <- ts(bimbo[,5], start=2006, frequency = 12)
+plot(bimbosta)
+Acf(bimbostc)
+bimbopro<-meanf(bimbostc,4) ##Pronostico por medio del metodo de la media
+plot(bimbopro) ### Graficamos el pronostico
+liverpro<-naive(liversta,4) ####Pronóstico por medio del método ingenuo
+plot(liverpro) ###Graficamos el método Ingenuo
+##Ingenuo estacional pronostica con base al 
+inburpro<-snaive(inbursta,4)
+plot(inburpro)
+####Metodo de la deriva
+carsopro<-rwf(carsosta,4,drift = T)
+plot(carsopro)
+#########################EJEMPLOS############
+bimbo06.10<-window(bimbostc,start=2006,end=2014)
+bimbo1<-meanf(bimbo06.10,12)
+bimbo2<-snaive(bimbo06.10,12)
+bimbo3<-rwf(bimbo06.10,12)
+bimbo4<-rwf(bimbo06.10,12,drift = T)
+plot(bimbosta,plot.conf=FALSE,main="Proyeccion prescios Bimbo",xlim=c(2006,2015))
+lines(bimbo1$mean,col=2)
+lines(bimbo2$mean,col=3)
+lines(bimbo3$mean,col=4)
+legend("topleft",lty = 1,col = c(2,3,4),legend = c("MEDIA","INGENUO","INGENUO ESTACIONAL"))
